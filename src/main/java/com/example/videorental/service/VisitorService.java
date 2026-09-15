@@ -1,5 +1,6 @@
 package com.example.videorental.service;
 
+import com.example.videorental.exception.VisitorNotFoundException;
 import com.example.videorental.model.Visitor;
 import com.example.videorental.repository.VisitorRepository;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import com.example.videorental.exception.VisitorNotFoundException;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +30,7 @@ public class VisitorService {
     @Transactional(readOnly = true)
     public Visitor getVisitorById(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Visitor not found with id: " + id));
+            .orElseThrow(() -> new VisitorNotFoundException(id));
     }
 
     @Transactional
@@ -91,5 +93,14 @@ public class VisitorService {
         report.put("withDisk", repository.countByHasDiskTrue());
         report.put("totalRegistered", repository.count());
         return report;
+    }
+
+    @Transactional
+    public void deleteVisitor(Long id) {
+        Visitor visitor = getVisitorById(id);
+        if (Boolean.TRUE.equals(visitor.getHasDisk())) {
+            throw new RuntimeException("Cannot delete: visitor still holds a disk");
+        }
+        repository.delete(visitor);
     }
 }

@@ -54,6 +54,12 @@ public class VisitorController {
         return service.returnDisk(id);
     }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        service.deleteVisitor(id);
+    }
+
     @GetMapping("/report")
     public Map<String, Long> getReport() {
         return service.getReport();

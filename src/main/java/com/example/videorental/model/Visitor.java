@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -26,6 +27,9 @@ public class Visitor {
 
     @Column(nullable = false, unique = true, length = 20)
     private String phone;
+
+    @Column(nullable = false, unique = true, length = 100)
+    private String email;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
